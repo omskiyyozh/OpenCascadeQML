@@ -13,11 +13,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
-find_package (OpenCascade CONFIG REQUIRED)
+find_package (OpenCascade REQUIRED)
 find_package (OpenGL REQUIRED)
+
+include_directories(${OpenCASCADE_INCLUDE_DIR})
+
 set(PROJECT_SOURCES
-        main.cpp
-        qml.qrc
+        src/main.cpp
+        src/OCCView.h
+        src/OCCView.cpp
+        qml/qml.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -26,6 +31,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
     )
 
+#target_include_directories(OpenCascadeQML PUBLIC ${Open_CASCADE_INCLUDE_DIR})
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET OpenCascadeQML APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
@@ -49,21 +55,7 @@ target_compile_definitions(OpenCascadeQML
 target_link_libraries(OpenCascadeQML
     PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick
     ${OPENGL_LIBRARIES}
-    TKernel
-    TKMath
-    TKG3d
-    TKBRep
-    TKGeomBase
-    TKGeomAlgo
-    TKTopAlgo
-    TKPrim
-    TKBO
-    TKBool
-    TKOffset
-    TKService
-    TKV3d
-    TKOpenGl
-    TKFillet
+    ${OpenCASCADE_LIBRARIES}
 )
 
 set_target_properties(OpenCascadeQML PROPERTIES
