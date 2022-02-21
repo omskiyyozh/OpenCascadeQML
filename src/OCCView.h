@@ -1,28 +1,66 @@
-#pragma once
+#ifndef OCCView_H
+#define OCCView_H
+
 #include <QtQuick/QQuickItem>
+#include <QtQuick/QQuickWindow.h>
+#include <QMutex.h>
+
+#include <OpenGl_GraphicDriver.hxx>
+#include <V3d_View.hxx>
 #include <V3d_Viewer.hxx>
 #include <AIS_InteractiveContext.hxx>
 #include <Graphic3d_Vec2.hxx>
 
 #include <Aspect_Drawable.hxx>
 #include <Aspect_DisplayConnection.hxx>
-#include <V3d_View.hxx>
 
-#include <Aspect_Handle.hxx>
+//Renderer class
+class OCCView : public QQuickItem
+{
+    Q_OBJECT
 
-class OCCView: public QQuickItem {
+    // Member fields.
+private:
+    Handle(V3d_Viewer)				m_viewer;
+    Handle(V3d_View)				m_view;
+    Handle(AIS_InteractiveContext)	m_context;
+
+    QSize							m_viewportSize;
+    QPoint							m_viewportPos;
+    QMutex							m_mutex;
+
+    // Properties.
 public:
-    explicit OCCView();
-    ~OCCView ();
+
+    // Constructor/Destructor.
+public:
+    explicit OCCView(QQuickItem* parent = nullptr);
+
+    // Signals.
+signals:
+
+    // Slots.
+private slots:
+    void onWindowChanged(QQuickWindow* window);
 
 public slots:
-    void resize();
-    void zoom();
-    void rotate();
-    void pan();
-private:
-Handle(V3d_Viewer) m_viewer;
-Handle(V3d_View) m_view;
-Handle(AIS_InteractiveContext) m_context;
+    void onSynchronizing();
+    void onInvalidating();
+    void onRendering();
 
+    // Public interface.
+public:
+
+    // Protected interface.
+protected:
+    void initializeViewer(const Aspect_Drawable& drawable);
+
+    // Private interface.
+private:
+    void createDemoScene();
+
+    // Static interface.
+public:
 };
+
+#endif // OCCView_H

@@ -1,19 +1,15 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Controls 2.12
+import OpenCascade 7.6
 
-Window {
-    id: main_window
-    width: 800
-    height: 600
+ApplicationWindow {
     visible: true
-    title: qsTr("OpenCascadeQML")
-    Item {
-        id: main_item
-        Item {
-            id: occt_viewer
-        }
-        MouseArea {
-            id: viewer_mouse_area
-        }
+    width: 640
+    height: 480
+    title: qrTs("OpenCascadeQML")
+
+    OCCView {
+        anchors.fill: parent
     }
 }

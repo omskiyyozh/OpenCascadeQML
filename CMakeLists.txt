@@ -55,7 +55,55 @@ target_compile_definitions(OpenCascadeQML
 target_link_libraries(OpenCascadeQML
     PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick
     ${OPENGL_LIBRARIES}
-    ${OpenCASCADE_LIBRARIES}
+    #${OpenCASCADE_LIBRARIES}
+    TKBin
+    TKBinL
+    TKBinTObj
+    TKBinXCAF
+    TKBO
+    TKBool
+    TKBRep
+    TKCAF
+    TKCDF
+    TKernel
+    TKFeat
+    TKFillet
+    TKG2d
+    TKG3d
+    TKGeomAlgo
+    TKGeomBase
+    TKHLR
+    TKIGES
+    TKLCAF
+    TKMath
+    TKMesh
+    TKMeshVS
+    TKOffset
+    TKOpenGl
+    TKPrim
+    TKService
+    TKShHealing
+    TKStd
+    TKStdL
+    TKSTEP
+    TKSTEP209
+    TKSTEPAttr
+    TKSTEPBase
+    TKSTL
+    TKTObj
+    TKTopAlgo
+    TKV3d
+    TKVCAF
+    TKVRML
+    TKXCAF
+    TKXDEIGES
+    TKXDESTEP
+    TKXml
+    TKXmlL
+    TKXmlTObj
+    TKXmlXCAF
+    TKXSBase
+    User32.lib
 )
 
 set_target_properties(OpenCascadeQML PROPERTIES
