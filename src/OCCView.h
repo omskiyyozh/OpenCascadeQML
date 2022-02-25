@@ -14,12 +14,25 @@
 #include <Aspect_Drawable.hxx>
 #include <Aspect_DisplayConnection.hxx>
 
-//Renderer class
-class OCCView : public QQuickItem
+class OCCRenderer : public QObject
 {
-    Q_OBJECT
+Q_OBJECT;
+public:
+OCCRenderer();
+~OCCRenderer() {}
 
-    // Member fields.
+public slots:
+
+
+    void onRendering();
+
+public:
+    void initializeViewer(const Aspect_Drawable& drawable);
+    void setViewPortSize(const QSize &size, const QPoint &pos);
+    // Private interface.
+private:
+    void createDemoScene();
+
 private:
     Handle(V3d_Viewer)				m_viewer;
     Handle(V3d_View)				m_view;
@@ -28,7 +41,17 @@ private:
     QSize							m_viewportSize;
     QPoint							m_viewportPos;
     QMutex							m_mutex;
+};
 
+//Renderer class
+class OCCView : public QQuickItem
+{
+    Q_OBJECT
+
+    // Member fields.
+private:
+
+OCCRenderer *renderer;
     // Properties.
 public:
 
@@ -41,23 +64,9 @@ signals:
 
     // Slots.
 private slots:
-    void onWindowChanged(QQuickWindow* window);
-
-public slots:
     void onSynchronizing();
-    void onInvalidating();
-    void onRendering();
-
-    // Public interface.
-public:
-
-    // Protected interface.
-protected:
-    void initializeViewer(const Aspect_Drawable& drawable);
-
-    // Private interface.
-private:
-    void createDemoScene();
+    void onWindowChanged(QQuickWindow* window);
+ //    void onInvalidating();
 
     // Static interface.
 public:

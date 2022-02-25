@@ -3,11 +3,16 @@
 
 #include "OCCView.h"
 
+OCCRenderer::OCCRenderer() : m_view(nullptr), m_viewer(nullptr), m_context(nullptr)
+{
+
+}
+
 #include <BRepPrimAPI_MakeCone.hxx>
 #include <AIS_Shape.hxx>
 
 OCCView::OCCView(QQuickItem* parent) :
-    QQuickItem(parent), m_view(nullptr), m_viewer(nullptr), m_context(nullptr)
+    QQuickItem(parent), renderer (nullptr)
 {
     QObject::connect(this, &QQuickItem::windowChanged, this, &OCCView::onWindowChanged, Qt::DirectConnection);
 }
@@ -17,8 +22,9 @@ void OCCView::onWindowChanged(QQuickWindow* window)
     if (!window)
         return;
 
+
     QObject::connect(window, &QQuickWindow::beforeSynchronizing, this, &OCCView::onSynchronizing, Qt::DirectConnection);
-    QObject::connect(window, &QQuickWindow::sceneGraphInvalidated, this, &OCCView::onInvalidating, Qt::DirectConnection);
+  //  QObject::connect(window, &QQuickWindow::sceneGraphInvalidated, this, &OCCView::onInvalidating, Qt::DirectConnection);
 
     //window->setClearBeforeRendering(false);
 
@@ -27,40 +33,42 @@ void OCCView::onWindowChanged(QQuickWindow* window)
 void OCCView::onSynchronizing()
 {
     // If the viewer is not yet initialized, initialize it.
-    if (m_viewer.IsNull())
-    {
+    if (!renderer)
+    { //засунь в рендер винайди параметром, инциализацию не вызывать в гуишном потоке
+        renderer = new OCCRenderer();
         WId a = window()->winId();
         Aspect_Drawable drawable = Aspect_Drawable(&a);
-        this->initializeViewer(drawable);
-        QObject::connect(this->window(), &QQuickWindow::beforeRendering, this, &OCCView::onRendering, Qt::DirectConnection);
+        renderer->initializeViewer(drawable);
+        QObject::connect(this->window(), &QQuickWindow::beforeRendering, renderer, &OCCRenderer::onRendering, Qt::DirectConnection);
     }
-
-    // Get the control position and size.
+   //renderer->setViewportSize(window()->size() * window()->devicePixelRatio());
+//   renderer->setWindow(window());
+//    // Get the control position and size.
     QPoint viewportPos = this->mapToGlobal(QPointF(0, 0)).toPoint();
     QSize viewportSize = this->size().toSize();
+    renderer->setViewPortSize(viewportSize, viewportPos);
+//    // Check if the viewport needs to be resized.
+//    if (viewportPos.x() != m_viewportPos.x() || viewportPos.y() != m_viewportPos.y())
+//        m_view->MustBeResized();
+//    if (viewportSize.width() != m_viewportSize.width() || viewportSize.height() != m_viewportSize.height())
+//    {
+//        m_view->MustBeResized();
+//        m_view->Invalidate();
+//    }
 
-    // Check if the viewport needs to be resized.
-    if (viewportPos.x() != m_viewportPos.x() || viewportPos.y() != m_viewportPos.y())
-        m_view->MustBeResized();
-    if (viewportSize.width() != m_viewportSize.width() || viewportSize.height() != m_viewportSize.height())
-    {
-        m_view->MustBeResized();
-        m_view->Invalidate();
-    }
-
-    // Store the current pos and size.
-    m_viewportPos = viewportPos;
-    m_viewportSize = viewportSize;
+//    // Store the current pos and size.
+//    m_viewportPos = viewportPos;
+//    m_viewportSize = viewportSize;
 }
 
-void OCCView::onInvalidating()
-{
-    m_view.Nullify();
-    m_context.Nullify();
-    m_viewer.Nullify();
-}
+//void OCCRenderer::onInvalidating()
+//{
+//    m_view.Nullify();
+//    m_context.Nullify();
+//    m_viewer.Nullify();
+//}
 
-void OCCView::onRendering()
+void OCCRenderer::onRendering()
 {
     if (m_view.IsNull())
         return;
@@ -77,16 +85,16 @@ void OCCView::onRendering()
 }
 
 #include <QOpenGLContext>
-void OCCView::initializeViewer(const Aspect_Drawable& drawable)
+void OCCRenderer::initializeViewer(const Aspect_Drawable& drawable)
 {
     Q_ASSERT(m_viewer.IsNull());
 
     // Request device and render context.
     auto deviceContext = wglGetCurrentDC();
-   // auto renderContext = wglGetCurrentContext();
-    auto renderContext = QOpenGLContext::currentContext();
- //   if (drawable == nullptr || deviceContext == nullptr || renderContext == nullptr)
- //       return;
+    auto renderContext = wglGetCurrentContext();
+
+    if (drawable == nullptr || deviceContext == nullptr || renderContext == nullptr)
+        return;
 
     // Setup display driver.
     Handle(Aspect_DisplayConnection) display = new Aspect_DisplayConnection();
@@ -109,14 +117,50 @@ void OCCView::initializeViewer(const Aspect_Drawable& drawable)
     m_view = m_viewer->CreateView();
 
     m_view->SetImmediateUpdate(Standard_False);
-    m_view->SetWindow(window);
+    m_view->SetWindow(window, reinterpret_cast<Aspect_RenderingContext>(renderContext));
     m_view->TriedronDisplay(Aspect_TOTP_RIGHT_LOWER, Quantity_NOC_WHITESMOKE, 0.1, V3d_ZBUFFER);
 
     // Create a demo scene.
     this->createDemoScene();
 }
 
-void OCCView::createDemoScene()
+void OCCRenderer::setViewPortSize(const QSize &size, const QPoint &pos)
+{
+        if (pos.x() != m_viewportPos.x() || pos.y() != m_viewportPos.y())
+            m_view->MustBeResized();
+        if (size.width() != m_viewportSize.width() || size.height() != m_viewportSize.height())
+        {
+            m_view->MustBeResized();
+            m_view->Invalidate();
+        }
+
+        // Store the current pos and size.
+        m_viewportPos = pos;
+        m_viewportSize = size;
+
+}
+
+//void OCCRenderer::setViewPort()
+//{
+//    // Get the control position and size.
+//    QPoint viewportPos = this->mapToGlobal(QPointF(0, 0)).toPoint();
+//    QSize viewportSize = this->size().toSize();
+
+//    // Check if the viewport needs to be resized.
+//    if (viewportPos.x() != m_viewportPos.x() || viewportPos.y() != m_viewportPos.y())
+//        m_view->MustBeResized();
+//    if (viewportSize.width() != m_viewportSize.width() || viewportSize.height() != m_viewportSize.height())
+//    {
+//        m_view->MustBeResized();
+//        m_view->Invalidate();
+//    }
+
+//    // Store the current pos and size.
+//    m_viewportPos = viewportPos;
+//    m_viewportSize = viewportSize;
+//}
+
+void OCCRenderer::createDemoScene()
 {
     // Create a bisque cone at [0, 10, 0].
     gp_Ax2 axis;
@@ -138,3 +182,4 @@ void OCCView::createDemoScene()
     // Fit all into the view.
     m_view->FitAll();
 }
+
