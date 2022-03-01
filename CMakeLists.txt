@@ -13,11 +13,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
-find_package (OpenCascade REQUIRED)
+#find_package (OpenCascade REQUIRED)
 find_package (OpenGL REQUIRED)
 
+#include_directories(${OpenCASCADE_INCLUDE_DIR})
+set (OpenCASCADE_INCLUDE_DIR C:/occt760build/inc)
+set (OpenCASCADE_LIB_DIR C:/occt760build/vc16/libd)
 include_directories(${OpenCASCADE_INCLUDE_DIR})
-
+link_directories(${OpenCASCADE_LIB_DIR})
 set(PROJECT_SOURCES
         src/main.cpp
         src/OCCView.h
@@ -65,6 +68,8 @@ target_link_libraries(OpenCascadeQML
     TKBRep
     TKCAF
     TKCDF
+    TKDCAF
+    TKDraw
     TKernel
     TKFeat
     TKFillet
@@ -81,6 +86,7 @@ target_link_libraries(OpenCascadeQML
     TKOffset
     TKOpenGl
     TKPrim
+    TKQADraw
     TKService
     TKShHealing
     TKStd
@@ -91,11 +97,15 @@ target_link_libraries(OpenCascadeQML
     TKSTEPBase
     TKSTL
     TKTObj
+    TKTObjDRAW
     TKTopAlgo
+    TKTopTest
     TKV3d
     TKVCAF
+    TKViewerTest
     TKVRML
     TKXCAF
+    TKXDEDRAW
     TKXDEIGES
     TKXDESTEP
     TKXml
@@ -103,6 +113,7 @@ target_link_libraries(OpenCascadeQML
     TKXmlTObj
     TKXmlXCAF
     TKXSBase
+    TKXSDRAW
     User32.lib
 )
 
