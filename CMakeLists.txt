@@ -13,10 +13,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
-#find_package (OpenCascade REQUIRED)
+find_package (OpenCascade REQUIRED)
 find_package (OpenGL REQUIRED)
 
-#include_directories(${OpenCASCADE_INCLUDE_DIR})
+include_directories(${OpenCASCADE_INCLUDE_DIR})
 set (OpenCASCADE_INCLUDE_DIR C:/occt760build/inc)
 set (OpenCASCADE_LIB_DIR C:/occt760build/vc16/libd)
 include_directories(${OpenCASCADE_INCLUDE_DIR})
@@ -58,62 +58,62 @@ target_compile_definitions(OpenCascadeQML
 target_link_libraries(OpenCascadeQML
     PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick
     ${OPENGL_LIBRARIES}
-    #${OpenCASCADE_LIBRARIES}
-    TKBin
-    TKBinL
-    TKBinTObj
-    TKBinXCAF
-    TKBO
-    TKBool
-    TKBRep
-    TKCAF
-    TKCDF
-    TKDCAF
-    TKDraw
-    TKernel
-    TKFeat
-    TKFillet
-    TKG2d
-    TKG3d
-    TKGeomAlgo
-    TKGeomBase
-    TKHLR
-    TKIGES
-    TKLCAF
-    TKMath
-    TKMesh
-    TKMeshVS
-    TKOffset
-    TKOpenGl
-    TKPrim
-    TKQADraw
-    TKService
-    TKShHealing
-    TKStd
-    TKStdL
-    TKSTEP
-    TKSTEP209
-    TKSTEPAttr
-    TKSTEPBase
-    TKSTL
-    TKTObj
-    TKTObjDRAW
-    TKTopAlgo
-    TKTopTest
-    TKV3d
-    TKVCAF
-    TKViewerTest
-    TKVRML
-    TKXCAF
-    TKXDEDRAW
-    TKXDEIGES
-    TKXDESTEP
-    TKXml
-    TKXmlL
-    TKXmlTObj
-    TKXmlXCAF
-    TKXSBase
-    TKXSDRAW
+    ${OpenCASCADE_LIBRARIES}
+#    TKBin
+#    TKBinL
+#    TKBinTObj
+#    TKBinXCAF
+#    TKBO
+#    TKBool
+#    TKBRep
+#    TKCAF
+#    TKCDF
+#    TKDCAF
+#    TKDraw
+#    TKernel
+#    TKFeat
+#    TKFillet
+#    TKG2d
+#    TKG3d
+#    TKGeomAlgo
+#    TKGeomBase
+#    TKHLR
+#    TKIGES
+#    TKLCAF
+#    TKMath
+#    TKMesh
+#    TKMeshVS
+#    TKOffset
+#    TKOpenGl
+#    TKPrim
+#    TKQADraw
+#    TKService
+#    TKShHealing
+#    TKStd
+#    TKStdL
+#    TKSTEP
+#    TKSTEP209
+#    TKSTEPAttr
+#    TKSTEPBase
+#    TKSTL
+#    TKTObj
+#    TKTObjDRAW
+#    TKTopAlgo
+#    TKTopTest
+#    TKV3d
+#    TKVCAF
+#    TKViewerTest
+#    TKVRML
+#    TKXCAF
+#    TKXDEDRAW
+#    TKXDEIGES
+#    TKXDESTEP
+#    TKXml
+#    TKXmlL
+#    TKXmlTObj
+#    TKXmlXCAF
+#    TKXSBase
+#    TKXSDRAW
     User32.lib
 )
 
