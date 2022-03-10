@@ -32,6 +32,24 @@ Window {
     OCCT {
         id: openCascade
         anchors.fill: parent
-        //tChanged: mainWindow.update()
+        onOccViewChanged: mainWindow.update()
+    }
+    MouseArea {
+        width: mainWindow.width
+        height: mainWindow.height
+        acceptedButtons:  Qt.AllButtons
+
+        onPressed:(mouse)=> {
+            openCascade.mousePress(mouse.x, mouse.y, mouse.buttons)
+        }
+        onReleased:(mouse)=> {
+            openCascade.mouseRelease(mouse.x, mouse.y, mouse.buttons)
+        }
+        onWheel:(wheel)=> {
+            openCascade.mouseWheel(wheel.x, wheel.y, wheel.angleDelta.y, wheel.buttons)
+        }
+        onPositionChanged:(mouse)=> {
+            openCascade.mouseMove(mouse.x, mouse.y, mouse.buttons)
+        }
     }
 }
