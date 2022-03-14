@@ -61,7 +61,7 @@ void OCCTRenderer::initViewer(Aspect_Drawable drawable) {
     Handle(Aspect_DisplayConnection) display;
     Handle(OpenGl_GraphicDriver) driver = new OpenGl_GraphicDriver(display,Standard_False);
     //driver->EnableVBO(Standard_True);
-    driver->ChangeOptions().buffersNoSwap = Standard_False;
+    driver->ChangeOptions().buffersNoSwap = Standard_True;
     driver->ChangeOptions().buffersOpaqueAlpha = Standard_True;
     driver->ChangeOptions().sRGBDisable = Standard_False;
     driver->ChangeOptions().ffpEnable = Standard_True;
@@ -110,9 +110,9 @@ void OCCT::sync() {
    //  connect(window(), &QQuickWindow::beforeRendering, m_renderer,
    //        &OCCTRenderer::init, Qt::DirectConnection);
     connect(window(), &QQuickWindow::beforeRenderPassRecording, m_renderer,
-            &OCCTRenderer::paint, Qt::DirectConnection);
-    connect(window(), &QQuickWindow::afterRendering, m_renderer,
-           &OCCTRenderer::init, Qt::DirectConnection);
+            &OCCTRenderer::init, Qt::DirectConnection);
+//    connect(window(), &QQuickWindow::afterRendering, m_renderer,
+//           &OCCTRenderer::paint, Qt::DirectConnection);
   }
       //  connect(window(), &QQuickWindow::afterRenderPassRecording, m_renderer,
       //          &OCCTRenderer::init, Qt::DirectConnection);
