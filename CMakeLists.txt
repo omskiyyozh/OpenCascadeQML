@@ -13,12 +13,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
-find_package (OpenCascade REQUIRED)
 find_package (OpenGL REQUIRED)
 
-include_directories(${OpenCASCADE_INCLUDE_DIR})
-set (OpenCASCADE_INCLUDE_DIR C:/occt760build/inc)
-set (OpenCASCADE_LIB_DIR C:/occt760build/vc16/libd)
+message ("$ENV{CSF_OCCTIncludePath}")
+
+set (OpenCASCADE_INCLUDE_DIR $ENV{CSF_OCCTIncludePath})
+set (OpenCASCADE_LIB_DIR $ENV{CSF_OCCTLibPath})
+
 include_directories(${OpenCASCADE_INCLUDE_DIR})
 link_directories(${OpenCASCADE_LIB_DIR})
 set(PROJECT_SOURCES
@@ -33,24 +34,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-
-#target_include_directories(OpenCascadeQML PUBLIC ${Open_CASCADE_INCLUDE_DIR})
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET OpenCascadeQML APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
-    if(ANDROID)
-        add_library(OpenCascadeQML SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
         add_executable(OpenCascadeQML
           ${PROJECT_SOURCES}
         )
-    endif()
 endif()
 
 target_compile_definitions(OpenCascadeQML
@@ -58,15 +45,65 @@ target_compile_definitions(OpenCascadeQML
 target_link_libraries(OpenCascadeQML
     PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick
     ${OPENGL_LIBRARIES}
-    ${OpenCASCADE_LIBRARIES}
+    TKBin
+    TKBinL
+    TKBinTObj
+    TKBinXCAF
+    TKBO
+    TKBool
+    TKBRep
+    TKCAF
+    TKCDF
+    TKDCAF
+    TKDraw
+    TKernel
+    TKFeat
+    TKFillet
+    TKG2d
+    TKG3d
+    TKGeomAlgo
+    TKGeomBase
+    TKHLR
+    TKIGES
+    TKLCAF
+    TKMath
+    TKMesh
+    TKMeshVS
+    TKOffset
+    TKOpenGl
+    TKPrim
+    TKQADraw
+    TKService
+    TKShHealing
+    TKStd
+    TKStdL
+    TKSTEP
+    TKSTEP209
+    TKSTEPAttr
+    TKSTEPBase
+    TKSTL
+    TKTObj
+    TKTObjDRAW
+    TKTopAlgo
+    TKTopTest
+    TKV3d
+    TKVCAF
+    TKViewerTest
+    TKVRML
+    TKXCAF
+    TKXDEDRAW
+    TKXDEIGES
+    TKXDESTEP
+    TKXml
+    TKXmlL
+    TKXmlTObj
+    TKXmlXCAF
+    TKXSBase
+    TKXSDRAW
     User32.lib
 )
 
 set_target_properties(OpenCascadeQML PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
