@@ -43,6 +43,7 @@ private:
   Handle(V3d_Viewer) m_viewer{nullptr};
   Handle(V3d_View) m_view{nullptr};
   Handle(AIS_InteractiveContext) m_context{nullptr};
+  std::list <Handle(AIS_Shape)> objects;
 
 private:
   // save the mouse position.
@@ -83,9 +84,7 @@ public slots:
   void rotationTheScene();
   void movementTheScene();
 };
-//! [1]
 
-//! [2]
 class OCCT : public QQuickItem {
   Q_OBJECT
   QML_ELEMENT

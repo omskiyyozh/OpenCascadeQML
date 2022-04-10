@@ -47,6 +47,7 @@ Window {
         }
         onWheel:(wheel)=> {
             openCascade.mouseWheel(wheel.x, wheel.y, wheel.angleDelta.y, wheel.buttons)
+                    mainWindow.update()
         }
         onPositionChanged:(mouse)=> {
             openCascade.mouseMove(mouse.x, mouse.y, mouse.buttons)
