@@ -20,7 +20,7 @@
 #include <Aspect_Drawable.hxx>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
-//! [1]
+
 class OCCTRenderer : public QObject {
   Q_OBJECT
 public:
@@ -46,13 +46,11 @@ private:
   std::list <Handle(AIS_Shape)> objects;
 
 private:
-  // save the mouse position.
   Standard_Integer myXmin;
   Standard_Integer myYmin;
   Standard_Integer myXmax;
   Standard_Integer myYmax;
 
-  // mouse actions.
   enum CurrentAction3d {
     CurAction3d_Nothing,
     CurAction3d_DynamicZooming,
@@ -62,12 +60,10 @@ private:
     CurAction3d_DynamicRotation
   };
 
-  // the mouse current mode.
   CurrentAction3d myCurrentMode{CurAction3d_DynamicRotation};
 
-  // CurrentAction3d myCurrentMode {CurAction3d_DynamicPanning};
 public:
-  // Mouse
+
   void leftButtonDown(const int &x, const int &y);
   void middleButtonDown(const int &x, const int &y);
   void rightButtonDown(){};
@@ -103,7 +99,6 @@ signals:
   void occViewChanged();
 
 public slots:
-  // slots for mouse events.
   void mousePress(const int x, const int y, const int buttonsFlag);
   void mouseRelease(const int x, const int y, const int buttonsFlag);
   void mouseWheel(const int x, const int y, const int delta,
